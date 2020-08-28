@@ -132,19 +132,20 @@ variable "os" {
     sku       = "16.04.0-LTS"
     version   = "latest"
    }
+  }
 
 
 
 
-variable "sql_server_name" {
+/*variable "sql_server_name" {
   description = "Name of the SQL Server"
   default = "sqldstideveu2"
-}
+}*/
 
-variable "mssql_elasticpool" {
+/*variable "mssql_elasticpool" {
   description = "Name of the SQL Pool"
   default = "CNO_DATA_HUB"
-}
+}*/
 
 locals {
   default_tags = {
