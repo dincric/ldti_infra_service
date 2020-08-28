@@ -1,4 +1,4 @@
-storage_account_name = "ldtiiaacstgacctdev"
-resource_group_name  = "ldtiiaacstgacctdevrg"
-container_name       = "tfstate"
-key                  = "terraform.tfstate"
+storage_account_name = "terraformstate1309"
+resource_group_name  = "Terraform-States"
+container_name       = "terraformstate-tst"
+key                  = "tst.tfstate"
