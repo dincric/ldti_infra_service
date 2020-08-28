@@ -1,40 +1,49 @@
 variable "location" {
+  type = "string"
   description = "Azure location where all resources should be created"
-  default     = "West US"
+  default     = "Westus2"
 }
 
 variable "env" {
+  type = "string"
   description = "Subscription environment"
   default     = "dev"
 }
 
-variable "subscription_id" {
-  description = "Subscription ID"
-}
+ variable "subscription_id" {
+    type = "string"
+    default = "f2e3c986-2967-4d73-bb15-728b54715951"
+  }
 
-variable "vnet" {
-  description = "Vnet"
-}
+  variable "client_id" {
+    type = "string"
+    default = "8ad1e4c4-2bbe-4d4b-b54b-335da2aa70b4"
+  }
 
-variable "subnet" {
-  description = "subnet"
-}
+  variable "client_secret" {
+    type = "string"
+    default = "Nkdox_DkC~XAtb6xPI0k59Wu7.qrE6qCs_"
 
-variable "purpose" {
-  description = "Why instance is created"
-}
+  }
+
+  variable "tenant_id" {
+    type = "string"
+    default = "70765d76-0633-4af1-8b6e-c7543d557969"
+  }
+
 
 
 variable "storage_account_name" {
   description = "Storage Account name"
+  default = "terraformstate28812"
 }
 
 variable "resource_group_name" {
   description = "resource group name for storage account"
+  default = "Terraform-States"
 }
 
-variable "subnet_id" {
-}
+
 
 variable "account_kind" {
   default = "StorageV2"
@@ -57,7 +66,7 @@ variable "ip_rules" {
 }
 
 variable "container_name" {
-  default = "tfstate"
+  default = "terraformstate-tst"
 }
 
 variable "container_access_type" {
@@ -70,12 +79,11 @@ variable "file_share" {
 
 variable "key" {
   description = "storage account remote backend state key"
+  default = "tst.tfstate"
+  
 }
 
-variable "vm_name" {
-  description = "Name of the VM"
-  default = "LXSASDID02"
-}
+
 
 variable "sql_server_name" {
   description = "Name of the SQL Server"
