@@ -72,58 +72,66 @@ resource "azurerm_storage_share" "example" {
 
 ## Azure Virtual Network Rerefence
 
-data "azurerm_virtual_network" "vnet" {
-  name                = var.vnet
-  location            = azurerm_resource_group.rgname.location
-  resource_group_name = azurerm_resource_group.rgname.name
+resource "azurerm_virtual_network" "vnet" {
+    name                = "vnet-dev-${var.location}-001"
+    address_space       = var.vnet_address_space
+    location            = azurerm_resource_group.rg.location
+    resource_group_name = azurerm_resource_group.rg.name
 }
 
-## Azure Subnet Rerefence
-
-data "azurerm_subnet" "subnet" {
-  name                 = var.subnet
-  resource_group_name  = azurerm_resource_group.rgname.name
-  virtual_network_name = data.azurerm_virtual_network.vnet.name
+# Create subnet
+resource "azurerm_subnet" "subnet" {
+  name                 = "snet-dev-${var.location}-001 "
+  resource_group_name  = azurerm_resource_group.rg.name
+  virtual_network_name = azurerm_virtual_network.vnet.name
+  address_prefix       = "10.0.0.0/24"
 }
 
-## Azure Network Interface
 
-resource "azurerm_network_interface" "main" {
-  name                = "${var.vm_name}-nic"
-  location            = azurerm_resource_group.rgname.location
-  resource_group_name = azurerm_resource_group.rgname.name
+# Create network interface
+resource "azurerm_network_interface" "nic" {
+  name                      = "nic-01-${var.servername}-dev-001 "
+  location                  = azurerm_resource_group.rg.location
+  resource_group_name       = azurerm_resource_group.rg.name
+  network_security_group_id = azurerm_network_security_group.nsg.id
 
   ip_configuration {
-    name                          = "testconfiguration1"
-    subnet_id                     = data.azurerm_subnet.subnet.id
-    private_ip_address_allocation = "Dynamic"
+    name                          = "niccfg-${var.servername}"
+    subnet_id                     = azurerm_subnet.subnet.id
+    private_ip_address_allocation = "dynamic"
+    public_ip_address_id          = azurerm_public_ip.publicip.id
   }
 }
 
-resource "azurerm_virtual_machine" "main" {
-  name                  = var.vm_name
-  location              = azurerm_resource_group.rgname.location
-  resource_group_name   = azurerm_resource_group.rgname.name
-  network_interface_ids = [azurerm_network_interface.main.id]
-  vm_size               = "Standard_DS1_v2"
 
-  storage_image_reference {
-    publisher = "Canonical"
-    offer     = "UbuntuServer"
-    sku       = "16.04-LTS"
-    version   = "latest"
-  }
+# Create virtual machine
+resource "azurerm_virtual_machine" "vm" {
+  name                  = var.servername
+  location              = azurerm_resource_group.rg.location
+  resource_group_name   = azurerm_resource_group.rg.name
+  network_interface_ids = [azurerm_network_interface.nic.id]
+  vm_size               = "Standard_B1s"
+
   storage_os_disk {
-    name              = "myosdisk1"
+    name              = "stvm${var.servername}os"
     caching           = "ReadWrite"
     create_option     = "FromImage"
-    managed_disk_type = "Standard_LRS"
+    managed_disk_type = lookup(var.managed_disk_type, var.location, "Standard_LRS")
   }
+
+  storage_image_reference {
+    publisher = var.os.publisher
+    offer     = var.os.offer
+    sku       = var.os.sku
+    version   = var.os.version
+  }
+
   os_profile {
-    computer_name  = "hostname"
-    admin_username = "testadmin"
-    admin_password = "Password1234!"
+    computer_name  = var.servername
+    admin_username = var.admin_username
+    admin_password = var.admin_password
   }
+
   os_profile_linux_config {
     disable_password_authentication = false
   }
