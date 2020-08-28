@@ -146,17 +146,17 @@ resource "azurerm_virtual_machine" "vm" {
 
 ## Azure SQL Server
 
-resource "azurerm_sql_server" "sql_server" {
+/*resource "azurerm_sql_server" "sql_server" {
   name                         = var.sql_server_name
   resource_group_name          = azurerm_resource_group.rgname.name
   location                     = azurerm_resource_group.rgname.location
   version                      = "12.0"
   administrator_login          = "4dm1n157r470r"
   administrator_login_password = "4-v3ry-53cr37-p455w0rd"
-}
+}*/
 
 
-resource "azurerm_mssql_elasticpool" "mssql_elasticpool" {
+/*resource "azurerm_mssql_elasticpool" "mssql_elasticpool" {
   name                = var.mssql_elasticpool
   resource_group_name = azurerm_resource_group.rgname.name
   location            = azurerm_resource_group.rgname.location
@@ -175,4 +175,4 @@ resource "azurerm_mssql_elasticpool" "mssql_elasticpool" {
     min_capacity = 0.25
     max_capacity = 4
   }
-}
+}*/
